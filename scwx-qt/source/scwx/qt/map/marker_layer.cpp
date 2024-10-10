@@ -94,8 +94,8 @@ void MarkerLayer::Initialize()
 
 void MarkerLayer::Render(const QMapLibre::CustomLayerRenderParameters& params)
 {
-   // auto markerManager = manager::MarkerManager::Instance();
    gl::OpenGLFunctions& gl = context()->gl();
+   context()->set_render_parameters(params);
 
    DrawLayer::Render(params);
 

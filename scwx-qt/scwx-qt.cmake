@@ -246,6 +246,7 @@ set(SRC_TYPES source/scwx/qt/types/alert_types.cpp
               source/scwx/qt/types/time_types.cpp
               source/scwx/qt/types/unit_types.cpp)
 set(HDR_UI source/scwx/qt/ui/about_dialog.hpp
+           source/scwx/qt/ui/add_marker_dialog.hpp
            source/scwx/qt/ui/alert_dialog.hpp
            source/scwx/qt/ui/alert_dock_widget.hpp
            source/scwx/qt/ui/animation_dock_widget.hpp
@@ -276,6 +277,7 @@ set(HDR_UI source/scwx/qt/ui/about_dialog.hpp
            source/scwx/qt/ui/update_dialog.hpp
            source/scwx/qt/ui/wfo_dialog.hpp)
 set(SRC_UI source/scwx/qt/ui/about_dialog.cpp
+           source/scwx/qt/ui/add_marker_dialog.cpp
            source/scwx/qt/ui/alert_dialog.cpp
            source/scwx/qt/ui/alert_dock_widget.cpp
            source/scwx/qt/ui/animation_dock_widget.cpp
@@ -306,6 +308,7 @@ set(SRC_UI source/scwx/qt/ui/about_dialog.cpp
            source/scwx/qt/ui/update_dialog.cpp
            source/scwx/qt/ui/wfo_dialog.cpp)
 set(UI_UI  source/scwx/qt/ui/about_dialog.ui
+           source/scwx/qt/ui/add_marker_dialog.ui
            source/scwx/qt/ui/alert_dialog.ui
            source/scwx/qt/ui/alert_dock_widget.ui
            source/scwx/qt/ui/animation_dock_widget.ui
@@ -315,11 +318,11 @@ set(UI_UI  source/scwx/qt/ui/about_dialog.ui
            source/scwx/qt/ui/gps_info_dialog.ui
            source/scwx/qt/ui/imgui_debug_dialog.ui
            source/scwx/qt/ui/layer_dialog.ui
+           source/scwx/qt/ui/marker_dialog.ui
+           source/scwx/qt/ui/marker_settings_widget.ui
            source/scwx/qt/ui/open_url_dialog.ui
            source/scwx/qt/ui/placefile_dialog.ui
            source/scwx/qt/ui/placefile_settings_widget.ui
-           source/scwx/qt/ui/marker_dialog.ui
-           source/scwx/qt/ui/marker_settings_widget.ui
            source/scwx/qt/ui/progress_dialog.ui
            source/scwx/qt/ui/radar_site_dialog.ui
            source/scwx/qt/ui/settings_dialog.ui

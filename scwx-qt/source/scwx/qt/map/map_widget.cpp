@@ -2,6 +2,7 @@
 #include <scwx/qt/gl/gl.hpp>
 #include <scwx/qt/manager/font_manager.hpp>
 #include <scwx/qt/manager/hotkey_manager.hpp>
+#include <scwx/qt/manager/marker_manager.hpp>
 #include <scwx/qt/manager/placefile_manager.hpp>
 #include <scwx/qt/manager/radar_product_manager.hpp>
 #include <scwx/qt/map/alert_layer.hpp>
@@ -9,10 +10,10 @@
 #include <scwx/qt/map/layer_wrapper.hpp>
 #include <scwx/qt/map/map_provider.hpp>
 #include <scwx/qt/map/map_settings.hpp>
+#include <scwx/qt/map/marker_layer.hpp>
 #include <scwx/qt/map/overlay_layer.hpp>
 #include <scwx/qt/map/overlay_product_layer.hpp>
 #include <scwx/qt/map/placefile_layer.hpp>
-#include <scwx/qt/map/marker_layer.hpp>
 #include <scwx/qt/map/radar_product_layer.hpp>
 #include <scwx/qt/map/radar_range_layer.hpp>
 #include <scwx/qt/map/radar_site_layer.hpp>
@@ -20,6 +21,7 @@
 #include <scwx/qt/model/layer_model.hpp>
 #include <scwx/qt/settings/general_settings.hpp>
 #include <scwx/qt/settings/palette_settings.hpp>
+#include <scwx/qt/ui/add_marker_dialog.hpp>
 #include <scwx/qt/util/file.hpp>
 #include <scwx/qt/util/maplibre.hpp>
 #include <scwx/qt/util/tooltip.hpp>
@@ -79,6 +81,7 @@ public:
        layerList_ {},
        imGuiRendererInitialized_ {false},
        radarProductManager_ {nullptr},
+       addMarkerDialog_ {nullptr},
        radarProductLayer_ {nullptr},
        overlayLayer_ {nullptr},
        placefileLayer_ {nullptr},
@@ -124,7 +127,6 @@ public:
 
       InitializeCustomStyles();
 
-      ConnectSignals();
    }
 
    ~MapWidgetImpl()
@@ -217,9 +219,13 @@ public:
 
    std::shared_ptr<manager::HotkeyManager> hotkeyManager_ {
       manager::HotkeyManager::Instance()};
+   std::shared_ptr<manager::MarkerManager> markerManager_ {
+      manager::MarkerManager::Instance()};
    std::shared_ptr<manager::PlacefileManager> placefileManager_ {
       manager::PlacefileManager::Instance()};
    std::shared_ptr<manager::RadarProductManager> radarProductManager_;
+
+   ui::AddMarkerDialog* addMarkerDialog_;
 
    std::shared_ptr<RadarProductLayer>   radarProductLayer_;
    std::shared_ptr<OverlayLayer>        overlayLayer_;
@@ -278,6 +284,11 @@ MapWidget::MapWidget(std::size_t id, const QMapLibre::Settings& settings) :
    setFocusPolicy(Qt::StrongFocus);
 
    ImGui_ImplQt_RegisterWidget(this);
+
+   // Add Marker Dialog
+   p->addMarkerDialog_ = new ui::AddMarkerDialog(this);
+   p->ConnectSignals();
+
 }
 
 MapWidget::~MapWidget()
@@ -416,6 +427,12 @@ void MapWidgetImpl::ConnectSignals()
            &manager::HotkeyManager::HotkeyReleased,
            this,
            &MapWidgetImpl::HandleHotkeyReleased);
+   connect(addMarkerDialog_,
+           &ui::AddMarkerDialog::accepted,
+           widget_,
+           [this]() {
+              markerManager_->add_marker(addMarkerDialog_->get_marker_info());
+           });
 }
 
 void MapWidgetImpl::HandleHotkeyPressed(types::Hotkey hotkey, bool isAutoRepeat)
@@ -424,6 +441,16 @@ void MapWidgetImpl::HandleHotkeyPressed(types::Hotkey hotkey, bool isAutoRepeat)
 
    switch (hotkey)
    {
+   case types::Hotkey::AddMarker:
+      if (hasMouse_)
+      {
+         auto coordinate = map_->coordinateForPixel(lastPos_);
+
+         addMarkerDialog_->set_coordinate(coordinate.first, coordinate.second);
+         addMarkerDialog_->show();
+      }
+      break;
+
    case types::Hotkey::ChangeMapStyle:
       if (context_->settings().isActive_)
       {

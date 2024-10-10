@@ -13,6 +13,7 @@ namespace types
 {
 
 static const std::unordered_map<Hotkey, std::string> hotkeyShortName_ {
+   {Hotkey::AddMarker, "add_marker"},
    {Hotkey::ChangeMapStyle, "change_map_style"},
    {Hotkey::CopyCursorCoordinates, "copy_cursor_coordinates"},
    {Hotkey::CopyMapCoordinates, "copy_map_coordinates"},
@@ -52,6 +53,7 @@ static const std::unordered_map<Hotkey, std::string> hotkeyShortName_ {
    {Hotkey::Unknown, "?"}};
 
 static const std::unordered_map<Hotkey, std::string> hotkeyLongName_ {
+   {Hotkey::AddMarker, "Add Location Marker"},
    {Hotkey::ChangeMapStyle, "Change Map Style"},
    {Hotkey::CopyCursorCoordinates, "Copy Cursor Coordinates"},
    {Hotkey::CopyMapCoordinates, "Copy Map Coordinates"},
