@@ -23,7 +23,7 @@ public:
    explicit AddMarkerDialog(QWidget* parent = nullptr);
    ~AddMarkerDialog();
 
-   void set_coordinate(double latitude, double longitude);
+   void setup(double latitude, double longitude);
 
    types::MarkerInfo get_marker_info() const;
 

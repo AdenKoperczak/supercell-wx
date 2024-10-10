@@ -26,23 +26,7 @@ public:
    {
    }
 
-   void ConnectSignals(AddMarkerDialog* self);
-
-   QLineEdit* nameLineEdit_ {nullptr};
-   std::string name_;
-   double latitude_;
-   double longitude_;
-
 };
-
-void AddMarkerDialog::Impl::ConnectSignals(AddMarkerDialog* self)
-{
-   QObject::connect(nameLineEdit_,
-                    &QLineEdit::textEdited,
-                    self,
-                    [=, this](const QString& text)
-                    { name_ = text.toStdString(); });
-}
 
 AddMarkerDialog::AddMarkerDialog(QWidget* parent) :
    QDialog(parent),
@@ -50,9 +34,6 @@ AddMarkerDialog::AddMarkerDialog(QWidget* parent) :
    ui(new Ui::AddMarkerDialog)
 {
    ui->setupUi(this);
-
-   p->nameLineEdit_ = ui->nameLineEdit;
-   p->ConnectSignals(this);
 }
 
 AddMarkerDialog::~AddMarkerDialog()
@@ -60,15 +41,18 @@ AddMarkerDialog::~AddMarkerDialog()
    delete ui;
 }
 
-void AddMarkerDialog::set_coordinate(double latitude, double longitude)
+void AddMarkerDialog::setup(double latitude, double longitude)
 {
-   p->latitude_ = latitude;
-   p->longitude_ = longitude;
+   ui->nameLineEdit->setText("");
+   ui->latitudeDoubleSpinBox->setValue(latitude);
+   ui->longitudeDoubleSpinBox->setValue(longitude);
 }
 
 types::MarkerInfo AddMarkerDialog::get_marker_info() const
 {
-   return types::MarkerInfo(p->name_, p->latitude_, p->longitude_);
+   return types::MarkerInfo(ui->nameLineEdit->text().toStdString(),
+                            ui->latitudeDoubleSpinBox->value(),
+                            ui->longitudeDoubleSpinBox->value());
 }
 
 

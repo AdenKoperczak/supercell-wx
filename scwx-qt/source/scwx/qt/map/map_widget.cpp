@@ -446,7 +446,7 @@ void MapWidgetImpl::HandleHotkeyPressed(types::Hotkey hotkey, bool isAutoRepeat)
       {
          auto coordinate = map_->coordinateForPixel(lastPos_);
 
-         addMarkerDialog_->set_coordinate(coordinate.first, coordinate.second);
+         addMarkerDialog_->setup(coordinate.first, coordinate.second);
          addMarkerDialog_->show();
       }
       break;
