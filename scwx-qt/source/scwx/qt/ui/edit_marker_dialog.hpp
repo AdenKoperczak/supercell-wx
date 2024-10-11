@@ -5,7 +5,7 @@
 
 namespace Ui
 {
-class AddMarkerDialog;
+class EditMarkerDialog;
 }
 
 namespace scwx
@@ -14,23 +14,24 @@ namespace qt
 {
 namespace ui
 {
-class AddMarkerDialog : public QDialog
+class EditMarkerDialog : public QDialog
 {
    Q_OBJECT
-   Q_DISABLE_COPY_MOVE(AddMarkerDialog)
+   Q_DISABLE_COPY_MOVE(EditMarkerDialog)
 
 public:
-   explicit AddMarkerDialog(QWidget* parent = nullptr);
-   ~AddMarkerDialog();
+   explicit EditMarkerDialog(QWidget* parent = nullptr);
+   ~EditMarkerDialog();
 
    void setup(double latitude, double longitude);
+   void setup(size_t index);
 
    types::MarkerInfo get_marker_info() const;
 
 private:
    class Impl;
    std::unique_ptr<Impl> p;
-   Ui::AddMarkerDialog*   ui;
+   Ui::EditMarkerDialog*   ui;
 };
 
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QAbstractTableModel>
+#include <QAbstractItemView>
 
 namespace scwx
 {
@@ -36,7 +37,6 @@ public:
    bool setData(const QModelIndex& index,
                 const QVariant&    value,
                 int                role = Qt::EditRole) override;
-
 
 public slots:
    void HandleMarkersInitialized(size_t count);

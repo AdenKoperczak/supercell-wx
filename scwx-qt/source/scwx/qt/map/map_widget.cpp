@@ -2,7 +2,6 @@
 #include <scwx/qt/gl/gl.hpp>
 #include <scwx/qt/manager/font_manager.hpp>
 #include <scwx/qt/manager/hotkey_manager.hpp>
-#include <scwx/qt/manager/marker_manager.hpp>
 #include <scwx/qt/manager/placefile_manager.hpp>
 #include <scwx/qt/manager/radar_product_manager.hpp>
 #include <scwx/qt/map/alert_layer.hpp>
@@ -21,7 +20,7 @@
 #include <scwx/qt/model/layer_model.hpp>
 #include <scwx/qt/settings/general_settings.hpp>
 #include <scwx/qt/settings/palette_settings.hpp>
-#include <scwx/qt/ui/add_marker_dialog.hpp>
+#include <scwx/qt/ui/edit_marker_dialog.hpp>
 #include <scwx/qt/util/file.hpp>
 #include <scwx/qt/util/maplibre.hpp>
 #include <scwx/qt/util/tooltip.hpp>
@@ -81,7 +80,7 @@ public:
        layerList_ {},
        imGuiRendererInitialized_ {false},
        radarProductManager_ {nullptr},
-       addMarkerDialog_ {nullptr},
+       editMarkerDialog_ {nullptr},
        radarProductLayer_ {nullptr},
        overlayLayer_ {nullptr},
        placefileLayer_ {nullptr},
@@ -219,13 +218,11 @@ public:
 
    std::shared_ptr<manager::HotkeyManager> hotkeyManager_ {
       manager::HotkeyManager::Instance()};
-   std::shared_ptr<manager::MarkerManager> markerManager_ {
-      manager::MarkerManager::Instance()};
    std::shared_ptr<manager::PlacefileManager> placefileManager_ {
       manager::PlacefileManager::Instance()};
    std::shared_ptr<manager::RadarProductManager> radarProductManager_;
 
-   ui::AddMarkerDialog* addMarkerDialog_;
+   std::shared_ptr<ui::EditMarkerDialog> editMarkerDialog_;
 
    std::shared_ptr<RadarProductLayer>   radarProductLayer_;
    std::shared_ptr<OverlayLayer>        overlayLayer_;
@@ -286,7 +283,7 @@ MapWidget::MapWidget(std::size_t id, const QMapLibre::Settings& settings) :
    ImGui_ImplQt_RegisterWidget(this);
 
    // Add Marker Dialog
-   p->addMarkerDialog_ = new ui::AddMarkerDialog(this);
+   p->editMarkerDialog_ = std::make_shared<ui::EditMarkerDialog>(this);
    p->ConnectSignals();
 
 }
@@ -427,12 +424,6 @@ void MapWidgetImpl::ConnectSignals()
            &manager::HotkeyManager::HotkeyReleased,
            this,
            &MapWidgetImpl::HandleHotkeyReleased);
-   connect(addMarkerDialog_,
-           &ui::AddMarkerDialog::accepted,
-           widget_,
-           [this]() {
-              markerManager_->add_marker(addMarkerDialog_->get_marker_info());
-           });
 }
 
 void MapWidgetImpl::HandleHotkeyPressed(types::Hotkey hotkey, bool isAutoRepeat)
@@ -446,8 +437,8 @@ void MapWidgetImpl::HandleHotkeyPressed(types::Hotkey hotkey, bool isAutoRepeat)
       {
          auto coordinate = map_->coordinateForPixel(lastPos_);
 
-         addMarkerDialog_->setup(coordinate.first, coordinate.second);
-         addMarkerDialog_->show();
+         editMarkerDialog_->setup(coordinate.first, coordinate.second);
+         editMarkerDialog_->show();
       }
       break;
 
