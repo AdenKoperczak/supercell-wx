@@ -25,6 +25,7 @@ static const std::string logPrefix_ = "scwx::qt::manager::marker_manager";
 static const auto        logger_    = scwx::util::Logger::Create(logPrefix_);
 
 static const std::string kNameName_      = "name";
+static const std::string kIconName_      = "icon";
 static const std::string kLatitudeName_  = "latitude";
 static const std::string kLongitudeName_ = "longitude";
 
@@ -53,10 +54,6 @@ public:
 class MarkerManager::Impl::MarkerRecord
 {
 public:
-   MarkerRecord(const std::string& name, double latitude, double longitude) :
-      markerInfo_ {types::MarkerInfo(name, latitude, longitude)}
-   {
-   }
    MarkerRecord(const types::MarkerInfo& info) :
       markerInfo_ {info}
    {
@@ -74,6 +71,7 @@ public:
                           const std::shared_ptr<MarkerRecord>& record)
    {
       jv = {{kNameName_, record->markerInfo_.name},
+            {kIconName_, record->markerInfo_.iconName},
             {kLatitudeName_, record->markerInfo_.latitude},
             {kLongitudeName_, record->markerInfo_.longitude}};
    }
@@ -81,10 +79,11 @@ public:
    friend MarkerRecord tag_invoke(boost::json::value_to_tag<MarkerRecord>,
                                   const boost::json::value& jv)
    {
-      return MarkerRecord(
+      return MarkerRecord(types::MarkerInfo(
          boost::json::value_to<std::string>(jv.at(kNameName_)),
+         boost::json::value_to<std::string>(jv.at(kIconName_)),
          boost::json::value_to<double>(jv.at(kLatitudeName_)),
-         boost::json::value_to<double>(jv.at(kLongitudeName_)));
+         boost::json::value_to<double>(jv.at(kLongitudeName_))));
    }
 };
 

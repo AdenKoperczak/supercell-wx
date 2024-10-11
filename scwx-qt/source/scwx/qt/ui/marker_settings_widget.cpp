@@ -63,7 +63,8 @@ void MarkerSettingsWidgetImpl::ConnectSignals()
                     self_,
                     [this]()
                     {
-                       markerManager_->add_marker(types::MarkerInfo("", 0, 0));
+                       markerManager_->add_marker(types::MarkerInfo(
+                          "", "images/location-marker", 0, 0));
                     });
    QObject::connect(self_->ui->removeButton,
                     &QPushButton::clicked,

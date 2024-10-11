@@ -2,8 +2,9 @@
 #include <scwx/qt/manager/marker_manager.hpp>
 #include <scwx/util/logger.hpp>
 #include <scwx/qt/types/marker_types.hpp>
-#include <scwx/qt/types/texture_types.hpp>
 #include <scwx/qt/gl/draw/geo_icons.hpp>
+
+#include <string>
 
 namespace scwx
 {
@@ -15,6 +16,7 @@ namespace map
 static const std::string logPrefix_ = "scwx::qt::map::marker_layer";
 static const auto        logger_    = scwx::util::Logger::Create(logPrefix_);
 
+
 class MarkerLayer::Impl
 {
 public:
@@ -25,12 +27,11 @@ public:
    }
    ~Impl() {}
 
+
    void ReloadMarkers();
    void ConnectSignals();
 
    MarkerLayer* self_;
-   const std::string& markerIconName_ {
-      types::GetTextureName(types::ImageTexture::LocationMarker)};
 
    std::shared_ptr<gl::draw::GeoIcons> geoIcons_;
 };
@@ -63,7 +64,7 @@ void MarkerLayer::Impl::ReloadMarkers()
          break;
       }
       std::shared_ptr<gl::draw::GeoIconDrawItem> icon = geoIcons_->AddIcon();
-      geoIcons_->SetIconTexture(icon, markerIconName_, 0);
+      geoIcons_->SetIconTexture(icon, marker->iconName, 0);
       geoIcons_->SetIconLocation(icon, marker->latitude, marker->longitude);
       geoIcons_->SetIconHoverText(icon, marker->name);
    }
@@ -86,7 +87,12 @@ void MarkerLayer::Initialize()
    DrawLayer::Initialize();
 
    p->geoIcons_->StartIconSheets();
-   p->geoIcons_->AddIconSheet(p->markerIconName_);
+   for (auto& markerIcon : types::getMarkerIcons())
+   {
+      p->geoIcons_->AddIconSheet(
+         markerIcon.name, 0, 0, markerIcon.hotX, markerIcon.hotY);
+   }
+
    p->geoIcons_->FinishIconSheets();
 
    p->ReloadMarkers();

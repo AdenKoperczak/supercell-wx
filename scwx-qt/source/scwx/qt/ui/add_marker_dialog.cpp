@@ -4,9 +4,12 @@
 #include <scwx/qt/types/marker_types.hpp>
 #include <scwx/util/logger.hpp>
 
-
 #include <string>
+#include <vector>
+
 #include <QObject>
+#include <QString>
+#include <QIcon>
 
 
 namespace scwx
@@ -26,6 +29,7 @@ public:
    {
    }
 
+   std::vector<QIcon> icons_ = {};
 };
 
 AddMarkerDialog::AddMarkerDialog(QWidget* parent) :
@@ -34,6 +38,17 @@ AddMarkerDialog::AddMarkerDialog(QWidget* parent) :
    ui(new Ui::AddMarkerDialog)
 {
    ui->setupUi(this);
+
+   auto& icons = types::getMarkerIcons();
+   p->icons_.reserve(icons.size());
+   for (auto& markerIcon : icons)
+   {
+      size_t index = p->icons_.size();
+      p->icons_.emplace_back(QString::fromStdString(markerIcon.path));
+      ui->iconComboBox->addItem(p->icons_[index],
+                                QString(""),
+                                QString::fromStdString(markerIcon.name));
+   }
 }
 
 AddMarkerDialog::~AddMarkerDialog()
@@ -44,17 +59,19 @@ AddMarkerDialog::~AddMarkerDialog()
 void AddMarkerDialog::setup(double latitude, double longitude)
 {
    ui->nameLineEdit->setText("");
+   ui->iconComboBox->setCurrentIndex(0);
    ui->latitudeDoubleSpinBox->setValue(latitude);
    ui->longitudeDoubleSpinBox->setValue(longitude);
 }
 
 types::MarkerInfo AddMarkerDialog::get_marker_info() const
 {
-   return types::MarkerInfo(ui->nameLineEdit->text().toStdString(),
-                            ui->latitudeDoubleSpinBox->value(),
-                            ui->longitudeDoubleSpinBox->value());
+   return types::MarkerInfo(
+      ui->nameLineEdit->text().toStdString(),
+      ui->iconComboBox->currentData().toString().toStdString(),
+      ui->latitudeDoubleSpinBox->value(),
+      ui->longitudeDoubleSpinBox->value());
 }
-
 
 } // namespace ui
 } // namespace qt

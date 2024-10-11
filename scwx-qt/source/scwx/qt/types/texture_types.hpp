@@ -19,6 +19,7 @@ enum class ImageTexture
    Cursor17,
    Dot3,
    LocationMarker,
+   LocationPinBlack,
    MapboxLogo,
    MapTilerLogo
 };

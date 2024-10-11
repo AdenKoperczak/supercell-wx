@@ -2,8 +2,6 @@
 
 #include <scwx/qt/map/draw_layer.hpp>
 
-#include <string>
-
 namespace scwx
 {
 namespace qt
