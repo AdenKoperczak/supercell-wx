@@ -20,6 +20,14 @@ enum class ImageTexture
    Dot3,
    LocationMarker,
    LocationPinBlack,
+   LocationPinBlue,
+   LocationPinGreen,
+   LocationPinMagenta,
+   LocationPinOrange,
+   LocationPinPink,
+   LocationPinRed,
+   LocationPinWhite,
+   LocationPinYellow,
    MapboxLogo,
    MapTilerLogo
 };
