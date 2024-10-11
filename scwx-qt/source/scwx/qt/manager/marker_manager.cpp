@@ -1,5 +1,6 @@
 #include <scwx/qt/manager/marker_manager.hpp>
 #include <scwx/qt/types/marker_types.hpp>
+#include <scwx/qt/util/color.hpp>
 #include <scwx/qt/util/json.hpp>
 #include <scwx/qt/main/application.hpp>
 #include <scwx/util/logger.hpp>
@@ -28,6 +29,7 @@ static const std::string kNameName_      = "name";
 static const std::string kIconName_      = "icon";
 static const std::string kLatitudeName_  = "latitude";
 static const std::string kLongitudeName_ = "longitude";
+static const std::string kIconColorName_ = "icon-color";
 
 class MarkerManager::Impl
 {
@@ -68,12 +70,13 @@ public:
 
    friend void tag_invoke(boost::json::value_from_tag,
                           boost::json::value&                  jv,
-                          const std::shared_ptr<MarkerRecord>& record)
-   {
+                          const std::shared_ptr<MarkerRecord>& record) {
       jv = {{kNameName_, record->markerInfo_.name},
             {kIconName_, record->markerInfo_.iconName},
             {kLatitudeName_, record->markerInfo_.latitude},
-            {kLongitudeName_, record->markerInfo_.longitude}};
+            {kLongitudeName_, record->markerInfo_.longitude},
+            {kIconColorName_,
+             util::color::ToArgbString(record->markerInfo_.iconColor)}};
    }
 
    friend MarkerRecord tag_invoke(boost::json::value_to_tag<MarkerRecord>,
@@ -83,7 +86,9 @@ public:
          boost::json::value_to<std::string>(jv.at(kNameName_)),
          boost::json::value_to<std::string>(jv.at(kIconName_)),
          boost::json::value_to<double>(jv.at(kLatitudeName_)),
-         boost::json::value_to<double>(jv.at(kLongitudeName_))));
+         boost::json::value_to<double>(jv.at(kLongitudeName_)),
+         util::color::ToRgba8PixelT(
+            boost::json::value_to<std::string>(jv.at(kIconColorName_)))));
    }
 };
 

@@ -23,6 +23,7 @@ public:
    explicit EditMarkerDialog(QWidget* parent = nullptr);
    ~EditMarkerDialog();
 
+   void setup();
    void setup(double latitude, double longitude);
    void setup(size_t index);
 

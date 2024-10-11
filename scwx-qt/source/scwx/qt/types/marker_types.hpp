@@ -1,6 +1,7 @@
 #pragma once
 
 #include <scwx/qt/types/texture_types.hpp>
+#include <boost/gil.hpp>
 
 #include <string>
 #include <vector>
@@ -15,14 +16,16 @@ namespace types
 
 struct MarkerInfo
 {
-   MarkerInfo(const std::string& name,
-              const std::string& iconName,
-              double             latitude,
-              double             longitude) :
+   MarkerInfo(const std::string&        name,
+              const std::string&        iconName,
+              double                    latitude,
+              double                    longitude,
+              boost::gil::rgba8_pixel_t iconColor) :
        name {name},
        latitude {latitude},
        longitude {longitude},
-       iconName {iconName}
+       iconName {iconName},
+       iconColor {iconColor}
    {
    }
 
@@ -30,6 +33,7 @@ struct MarkerInfo
    double      latitude;
    double      longitude;
    std::string iconName;
+   boost::gil::rgba8_pixel_t iconColor;
 };
 
 

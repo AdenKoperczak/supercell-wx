@@ -28,6 +28,7 @@ enum class ImageTexture
    LocationPinRed,
    LocationPinWhite,
    LocationPinYellow,
+   LocationHouse,
    MapboxLogo,
    MapTilerLogo
 };

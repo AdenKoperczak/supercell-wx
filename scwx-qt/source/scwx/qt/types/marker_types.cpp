@@ -23,6 +23,7 @@ const std::vector<MarkerIconInfo>& getMarkerIcons()
          MarkerIconInfo(types::ImageTexture::LocationPinRed, 8, 23),
          MarkerIconInfo(types::ImageTexture::LocationPinWhite, 8, 23),
          MarkerIconInfo(types::ImageTexture::LocationPinYellow, 8, 23),
+         MarkerIconInfo(types::ImageTexture::LocationHouse, -1, -1),
       };
    }
 

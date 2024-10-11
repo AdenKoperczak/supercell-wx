@@ -67,6 +67,7 @@ void MarkerLayer::Impl::ReloadMarkers()
       geoIcons_->SetIconTexture(icon, marker->iconName, 0);
       geoIcons_->SetIconLocation(icon, marker->latitude, marker->longitude);
       geoIcons_->SetIconHoverText(icon, marker->name);
+      geoIcons_->SetIconModulate(icon, marker->iconColor);
    }
 
    geoIcons_->FinishIcons();
