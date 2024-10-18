@@ -21,6 +21,7 @@ const std::vector<MarkerIconInfo>& getMarkerIcons()
          MarkerIconInfo(types::ImageTexture::LocationBuildingColumns, -1, -1, false),
          MarkerIconInfo(types::ImageTexture::LocationBuilding, -1, -1, false),
          MarkerIconInfo(types::ImageTexture::LocationCaravan, -1, -1, false),
+         MarkerIconInfo(types::ImageTexture::LocationHouse, -1, -1, false),
          MarkerIconInfo(types::ImageTexture::LocationTent, -1, -1, false),
       };
    }
