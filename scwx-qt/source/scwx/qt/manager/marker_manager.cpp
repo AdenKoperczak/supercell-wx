@@ -82,13 +82,38 @@ public:
    friend MarkerRecord tag_invoke(boost::json::value_to_tag<MarkerRecord>,
                                   const boost::json::value& jv)
    {
+      static const std::string defaultIconName =
+         types::getMarkerIcons()[0].name;
+      static const std::string defaultIconColor = "#ffaaaaaa";
+      const boost::json::object& jo = jv.as_object();
+
+      std::string iconName;
+      std::string iconColor;
+
+      if (jo.contains(kIconName_) && jo.at(kIconName_).is_string())
+      {
+         iconName = boost::json::value_to<std::string>(jv.at(kIconName_));
+      }
+      else
+      {
+         iconName = defaultIconName;
+      }
+
+      if (jo.contains(kIconColorName_) && jo.at(kIconColorName_).is_string())
+      {
+         iconColor = boost::json::value_to<std::string>(jv.at(kIconColorName_));
+      }
+      else
+      {
+         iconColor = defaultIconColor;
+      }
+
       return MarkerRecord(types::MarkerInfo(
          boost::json::value_to<std::string>(jv.at(kNameName_)),
-         boost::json::value_to<std::string>(jv.at(kIconName_)),
+         iconName,
          boost::json::value_to<double>(jv.at(kLatitudeName_)),
          boost::json::value_to<double>(jv.at(kLongitudeName_)),
-         util::color::ToRgba8PixelT(
-            boost::json::value_to<std::string>(jv.at(kIconColorName_)))));
+         util::color::ToRgba8PixelT(iconColor)));
    }
 };
 
