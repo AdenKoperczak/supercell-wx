@@ -161,11 +161,8 @@ void MarkerManager::Impl::ReadMarkerSettings()
                MarkerRecord record =
                   boost::json::value_to<MarkerRecord>(markerEntry);
 
-               if (!record.markerInfo_.name.empty())
-               {
-                  markerRecords_.emplace_back(
-                     std::make_shared<MarkerRecord>(record.markerInfo_));
-               }
+               markerRecords_.emplace_back(
+                  std::make_shared<MarkerRecord>(record.markerInfo_));
             }
             catch (const std::exception& ex)
             {
