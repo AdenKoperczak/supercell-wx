@@ -13,9 +13,9 @@ const std::vector<MarkerIconInfo>& getMarkerIcons()
    if (markerIcons.size() == 0)
    {
       markerIcons = {
-         MarkerIconInfo(types::ImageTexture::LocationMarker, -1, -1),
-         MarkerIconInfo(types::ImageTexture::LocationPin, 8, 23),
-         MarkerIconInfo(types::ImageTexture::LocationHouse, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationMarker, -1, -1, true),
+         MarkerIconInfo(types::ImageTexture::LocationPin, 8, 23, false),
+         MarkerIconInfo(types::ImageTexture::LocationHouse, -1, -1, false),
       };
    }
 

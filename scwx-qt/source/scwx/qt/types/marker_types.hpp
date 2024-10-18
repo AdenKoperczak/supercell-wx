@@ -40,11 +40,13 @@ struct MarkerInfo
 struct MarkerIconInfo {
    explicit MarkerIconInfo(types::ImageTexture texture,
                            std::int32_t        hotX,
-                           std::int32_t        hotY) :
+                           std::int32_t        hotY,
+                           bool                multicolored) :
       name(types::GetTextureName(texture)),
       path(types::GetTexturePath(texture)),
       hotX(hotX),
-      hotY(hotY)
+      hotY(hotY),
+      multicolored(multicolored)
    {
    }
 
@@ -52,6 +54,7 @@ struct MarkerIconInfo {
    std::string path;
    std::int32_t hotX;
    std::int32_t hotY;
+   bool multicolored;
 };
 
 const std::vector<MarkerIconInfo>& getMarkerIcons();

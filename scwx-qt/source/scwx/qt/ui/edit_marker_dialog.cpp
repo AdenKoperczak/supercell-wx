@@ -12,6 +12,7 @@
 #include <QObject>
 #include <QString>
 #include <QIcon>
+#include <QPixmap>
 #include <QColorDialog>
 
 
@@ -62,7 +63,21 @@ EditMarkerDialog::EditMarkerDialog(QWidget* parent) :
    for (auto& markerIcon : icons)
    {
       size_t index = p->icons_.size();
-      p->icons_.emplace_back(QString::fromStdString(markerIcon.path));
+      if (markerIcon.multicolored)
+      {
+         p->icons_.emplace_back(QString::fromStdString(markerIcon.path));
+      }
+      else
+      {
+         QPixmap pixmap = QPixmap(QString::fromStdString(markerIcon.path));
+         QBitmap mask =
+            pixmap.createMaskFromColor(QColor("white"), Qt::MaskOutColor);
+         pixmap.fill(QWidget::palette().color(QWidget::foregroundRole()));
+         pixmap.setMask(mask);
+
+         p->icons_.emplace_back(pixmap);
+      }
+
       ui->iconComboBox->addItem(p->icons_[index],
                                 QString(""),
                                 QString::fromStdString(markerIcon.name));
