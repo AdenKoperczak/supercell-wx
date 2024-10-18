@@ -92,16 +92,7 @@ EditMarkerDialog::~EditMarkerDialog()
 
 void EditMarkerDialog::setup()
 {
-   p->editIndex_ = p->markerManager_->marker_count();
-   ui->iconComboBox->setCurrentIndex(0);
-   p->markerManager_->add_marker(types::MarkerInfo(
-      "",
-      ui->iconComboBox->currentData().toString().toStdString(),
-      0,
-      0,
-      boost::gil::rgba8_pixel_t(255, 255, 255, 255)));
-   setup(p->editIndex_);
-   p->adding_ = true;
+   setup(0, 0);
 }
 
 void EditMarkerDialog::setup(double latitude, double longitude)

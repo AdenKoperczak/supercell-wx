@@ -3,6 +3,10 @@
 #include <scwx/util/logger.hpp>
 #include <scwx/qt/types/marker_types.hpp>
 #include <scwx/qt/gl/draw/geo_icons.hpp>
+#include <scwx/qt/ui/edit_marker_dialog.hpp>
+
+#include <QGeoPositionInfo>
+#include <QMouseEvent>
 
 #include <string>
 
@@ -23,10 +27,12 @@ public:
    explicit Impl(MarkerLayer* self, std::shared_ptr<MapContext> context) :
        self_ {self}, geoIcons_ {std::make_shared<gl::draw::GeoIcons>(context)}
    {
+      editMarkerDialog_ = std::make_shared<ui::EditMarkerDialog>();
       ConnectSignals();
    }
    ~Impl() {}
 
+   std::shared_ptr<ui::EditMarkerDialog> editMarkerDialog_;
 
    void ReloadMarkers();
    void ConnectSignals();
@@ -68,6 +74,27 @@ void MarkerLayer::Impl::ReloadMarkers()
       geoIcons_->SetIconLocation(icon, marker->latitude, marker->longitude);
       geoIcons_->SetIconHoverText(icon, marker->name);
       geoIcons_->SetIconModulate(icon, marker->iconColor);
+      geoIcons_->RegisterEventHandler(
+         icon,
+         [this, i](QEvent* ev)
+         {
+            switch (ev->type())
+            {
+
+            case QEvent::Type::MouseButtonPress:
+            {
+               // Reset bearing on mouse button press
+               QMouseEvent* mouseEvent = reinterpret_cast<QMouseEvent*>(ev);
+               if (mouseEvent->buttons() == Qt::MouseButton::RightButton)
+               {
+                  editMarkerDialog_->setup(i);
+                  editMarkerDialog_->show();
+               }
+            }
+            default:
+               break;
+            }
+         });
    }
 
    geoIcons_->FinishIcons();
