@@ -14,6 +14,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QColorDialog>
+#include <QPushButton>
 
 
 namespace scwx
@@ -43,6 +44,7 @@ public:
    void handle_rejected();
 
    EditMarkerDialog* self_;
+   QPushButton* deleteButton_;
 
    std::shared_ptr<manager::MarkerManager> markerManager_ =
       manager::MarkerManager::Instance();
@@ -82,6 +84,8 @@ EditMarkerDialog::EditMarkerDialog(QWidget* parent) :
                                 QString(""),
                                 QString::fromStdString(markerIcon.name));
    }
+   p->deleteButton_ =
+      ui->buttonBox->addButton("Delete", QDialogButtonBox::DestructiveRole);
    p->connect_signals();
 }
 
@@ -198,6 +202,15 @@ void EditMarkerDialog::Impl::connect_signals()
            &EditMarkerDialog::rejected,
            self_,
            [this]() { handle_rejected(); });
+
+   connect(deleteButton_,
+           &QPushButton::clicked,
+           self_,
+           [this]()
+           {
+              markerManager_->remove_marker(editIndex_);
+              self_->done(0);
+           });
 
    connect(self_->ui->iconColorLineEdit,
            &QLineEdit::textEdited,
