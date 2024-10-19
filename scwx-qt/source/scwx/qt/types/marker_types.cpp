@@ -13,16 +13,16 @@ const std::vector<MarkerIconInfo>& getMarkerIcons()
    if (markerIcons.size() == 0)
    {
       markerIcons = {
-         MarkerIconInfo(types::ImageTexture::LocationMarker, -1, -1, true),
-         MarkerIconInfo(types::ImageTexture::LocationPin, 6, 16, false),
-         MarkerIconInfo(types::ImageTexture::LocationCrosshair, -1, -1, false),
-         MarkerIconInfo(types::ImageTexture::LocationStar, -1, -1, false),
-         MarkerIconInfo(types::ImageTexture::LocationBriefcase, -1, -1, false),
-         MarkerIconInfo(types::ImageTexture::LocationBuildingColumns, -1, -1, false),
-         MarkerIconInfo(types::ImageTexture::LocationBuilding, -1, -1, false),
-         MarkerIconInfo(types::ImageTexture::LocationCaravan, -1, -1, false),
-         MarkerIconInfo(types::ImageTexture::LocationHouse, -1, -1, false),
-         MarkerIconInfo(types::ImageTexture::LocationTent, -1, -1, false),
+         MarkerIconInfo(types::ImageTexture::LocationMarker, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationPin, 6, 16),
+         MarkerIconInfo(types::ImageTexture::LocationCrosshair, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationStar, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationBriefcase, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationBuildingColumns, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationBuilding, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationCaravan, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationHouse, -1, -1),
+         MarkerIconInfo(types::ImageTexture::LocationTent, -1, -1),
       };
    }
 

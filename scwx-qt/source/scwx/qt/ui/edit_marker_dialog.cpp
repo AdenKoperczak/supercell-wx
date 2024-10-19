@@ -51,7 +51,7 @@ public:
 
    std::shared_ptr<manager::MarkerManager> markerManager_ =
       manager::MarkerManager::Instance();
-   std::vector<QIcon> icons_ = {};
+   const std::vector<types::MarkerIconInfo>* icons_;
    size_t editIndex_;
    bool adding_;
 };
@@ -59,12 +59,12 @@ public:
 QIcon EditMarkerDialog::Impl::get_colored_icon(size_t             index,
                                                const std::string& color)
 {
-   if (index >= icons_.size())
+   if (index >= icons_->size())
    {
       return QIcon();
    }
 
-   return util::modulateColors(icons_[index],
+   return util::modulateColors((*icons_)[index].qIcon,
                                self_->ui->iconComboBox->iconSize(),
                                QColor(QString::fromStdString(color)));
 }
@@ -76,13 +76,11 @@ EditMarkerDialog::EditMarkerDialog(QWidget* parent) :
 {
    ui->setupUi(this);
 
-   auto& icons = types::getMarkerIcons();
-   p->icons_.reserve(icons.size());
-   for (auto& markerIcon : icons)
+   p->icons_ = &types::getMarkerIcons();
+   for (auto& markerIcon : (*p->icons_))
    {
-      p->icons_.emplace_back(QString::fromStdString(markerIcon.path));
-
-      ui->iconComboBox->addItem(QString(""),
+      ui->iconComboBox->addItem(markerIcon.qIcon,
+                                QString(""),
                                 QString::fromStdString(markerIcon.name));
    }
    p->deleteButton_ =
@@ -235,7 +233,7 @@ void EditMarkerDialog::Impl::set_icon_color(const std::string& color)
    self_->ui->iconColorFrame->setStyleSheet(
       QString::fromStdString(fmt::format("background-color: {}", color)));
 
-   for (size_t i = 0; i < icons_.size(); i++)
+   for (size_t i = 0; i < icons_->size(); i++)
    {
       self_->ui->iconComboBox->setItemIcon(static_cast<int>(i),
                                            get_colored_icon(i, color));

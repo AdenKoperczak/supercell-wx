@@ -2,6 +2,7 @@
 
 #include <scwx/qt/types/texture_types.hpp>
 #include <boost/gil.hpp>
+#include <QIcon>
 
 #include <string>
 #include <vector>
@@ -40,13 +41,12 @@ struct MarkerInfo
 struct MarkerIconInfo {
    explicit MarkerIconInfo(types::ImageTexture texture,
                            std::int32_t        hotX,
-                           std::int32_t        hotY,
-                           bool                multicolored) :
-      name(types::GetTextureName(texture)),
-      path(types::GetTexturePath(texture)),
-      hotX(hotX),
-      hotY(hotY),
-      multicolored(multicolored)
+                           std::int32_t        hotY) :
+      name{types::GetTextureName(texture)},
+      path{types::GetTexturePath(texture)},
+      hotX{hotX},
+      hotY{hotY},
+      qIcon{QIcon(QString::fromStdString(path))}
    {
    }
 
@@ -54,7 +54,7 @@ struct MarkerIconInfo {
    std::string path;
    std::int32_t hotX;
    std::int32_t hotY;
-   bool multicolored;
+   QIcon qIcon;
 };
 
 const std::vector<MarkerIconInfo>& getMarkerIcons();
