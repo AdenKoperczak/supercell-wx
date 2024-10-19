@@ -84,7 +84,7 @@ public:
    {
       static const std::string defaultIconName =
          types::getMarkerIcons()[0].name;
-      static const std::string defaultIconColor = "#ffaaaaaa";
+      static const std::string defaultIconColor = "#ffff0000";
       const boost::json::object& jo = jv.as_object();
 
       std::string iconName;
