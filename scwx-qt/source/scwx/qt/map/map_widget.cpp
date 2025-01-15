@@ -1220,6 +1220,22 @@ void MapWidgetImpl::AddLayers()
          AddLayer(it->type_, it->description_, before);
       }
    }
+
+   if (!map_->sourceExists("scwxTestSource"))
+   {
+      QVariantMap sourceMap;
+      sourceMap["type"] = "raster";
+      sourceMap["url"] = "mbtiles:///home/aden/Code/supercell-wx/repo/MRMS_GENERATOR/test_dataset.mbtiles";
+      map_->addSource("scwxTestSource", sourceMap);
+   }
+
+   if (!map_->layerExists("scwxTestLayer")) {
+      QVariantMap layerMap;
+      layerMap["type"] = "raster";
+      layerMap["source"] = "scwxTestSource";
+      map_->addLayer("scwxTestLayer", layerMap);
+      map_->setPaintProperty("scwxTestLayer", "raster-resampling", "nearest");
+   }
 }
 
 void MapWidgetImpl::AddLayer(types::LayerType        type,
