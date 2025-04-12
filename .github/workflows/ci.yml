@@ -136,7 +136,7 @@ jobs:
       shell: bash
       run: |
         sudo apt-get install debootstrap qemu-user-static
-        sudo debootstrap --include=build-essential,cmake,binutils,g++
+        sudo debootstrap --include=build-essential,cmake,binutils,g++ \
                          --arch=arm64 \
                          bookworm \
                          $SYSROOT \
