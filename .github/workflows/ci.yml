@@ -37,6 +37,7 @@ jobs:
             conan_profile: scwx-win64_msvc2022
             appimage_arch: ''
             artifact_suffix: windows-x64
+            tool_chain_file: default.cmake
           - name: linux_gcc_x64
             os: ubuntu-22.04
             build_type: Release
@@ -53,6 +54,7 @@ jobs:
             appimage_arch: x86_64
             artifact_suffix: linux-x64
             compiler_packages: ''
+            tool_chain_file: default.cmake
           - name: linux_clang_x64
             os: ubuntu-24.04
             build_type: Release
@@ -69,6 +71,7 @@ jobs:
             appimage_arch: x86_64
             artifact_suffix: linux-clang-x64
             compiler_packages: clang-17
+            tool_chain_file: default.cmake
           - name: linux_gcc_arm64
             os: ubuntu-24.04-arm
             build_type: Release
@@ -85,11 +88,13 @@ jobs:
             appimage_arch: aarch64
             artifact_suffix: linux-arm64
             compiler_packages: g++-11
+            tool_chain_file: arm.cmake
     name: ${{ matrix.name }}
     env:
       CC: ${{ matrix.env_cc }}
       CXX: ${{ matrix.env_cxx }}
       SCWX_VERSION: v0.4.8
+      SYSROOT: ${{ github.workspace }}/sysroot
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -125,6 +130,16 @@ jobs:
                              libfuse2 \
                              ninja-build \
                              ${{ matrix.compiler_packages }}
+
+    - name: Setup Debian SysRoot
+      if: ${{ endsWith(matrix.os, 'arm64') }}
+      shell: bash
+      run: |
+        sudo apt-get install debootstrap qemu-user-static
+        sudo debootstrap --variant=minbase \
+                         --arch=arm64 bookworm \
+                         $SYSROOT \
+                         http://deb.debian.org/debian
 
     - name: Setup Python Environment
       shell: pwsh
@@ -162,6 +177,7 @@ jobs:
         cd build
         cmake ../source/ `
           -G Ninja `
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/source/.toolchains/${{ matrix.tool_chain_file }}" `
           -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" `
           -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="${{ github.workspace }}/source/external/cmake-conan/conan_provider.cmake" `
           -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/supercell-wx" `
