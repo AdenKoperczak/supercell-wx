@@ -143,7 +143,6 @@ jobs:
                          https://deb.debian.org/debian
         sudo chroot $SYSROOT apt update
         sudo chroot $SYSROOT apt upgrade
-        find $SYSROOT -name "*libbfd*"
 
     - name: Setup Python Environment
       shell: pwsh
