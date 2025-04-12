@@ -140,6 +140,8 @@ jobs:
                          --arch=arm64 bookworm \
                          $SYSROOT \
                          http://deb.debian.org/debian
+        sudo chroot $SYSROOT apt update
+        sudo chroot $SYSROOT apt install -y libatomic1 libatomic-dev
 
     - name: Setup Python Environment
       shell: pwsh
