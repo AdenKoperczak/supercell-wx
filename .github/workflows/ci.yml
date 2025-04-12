@@ -132,7 +132,7 @@ jobs:
                              ${{ matrix.compiler_packages }}
 
     - name: Setup Debian SysRoot
-      if: ${{ endsWith(matrix.os, 'arm64') }}
+      if: ${{ endsWith(matrix.os, 'arm') }}
       shell: bash
       run: |
         sudo apt-get install debootstrap qemu-user-static
