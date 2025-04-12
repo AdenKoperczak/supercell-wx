@@ -136,14 +136,13 @@ jobs:
       shell: bash
       run: |
         sudo apt-get install debootstrap qemu-user-static
-        sudo debootstrap --variant=minbase \
+        sudo debootstrap --variant=default \
+                         --include=build-essential,cmake,binutils,g++
                          --arch=arm64 bookworm \
                          $SYSROOT \
                          http://deb.debian.org/debian
         sudo chroot $SYSROOT apt update
-        sudo chroot $SYSROOT apt install -y libatomic1 \
-                                            gcc \
-                                            binutils
+        sudo chroot $SYSROOT apt upgrade
 
     - name: Setup Python Environment
       shell: pwsh
