@@ -136,14 +136,14 @@ jobs:
       shell: bash
       run: |
         sudo apt-get install debootstrap qemu-user-static
-        sudo debootstrap --include=build-essential,cmake,binutils,${{ matrix.compiler_packages }} \
+        sudo debootstrap --include=build-essential,cmake,binutils-dev,${{ matrix.compiler_packages }} \
                          --arch=arm64 \
-                         jammy \
+                         bookworm \
                          $SYSROOT \
-                         http://archive.ubuntu.com/ubuntu
+                         https://deb.debian.org/debian
         sudo chroot $SYSROOT apt update
         sudo chroot $SYSROOT apt upgrade
-        find $SYSROOT -name "libbfd-2.40-system.so"
+        find $SYSROOT -name "*libbfd*"
 
     - name: Setup Python Environment
       shell: pwsh
