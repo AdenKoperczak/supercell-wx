@@ -136,9 +136,8 @@ jobs:
       shell: bash
       run: |
         sudo apt-get install debootstrap qemu-user-static
-        sudo debootstrap --variant=default \
-                         --include=build-essential,cmake,binutils,g++
-                         --arch=arm64 bookworm \
+        sudo debootstrap --arch=arm64 \
+                         bookworm \
                          $SYSROOT \
                          http://deb.debian.org/debian
         sudo chroot $SYSROOT apt update
