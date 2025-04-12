@@ -143,6 +143,7 @@ jobs:
                          http://archive.ubuntu.com/ubuntu
         sudo chroot $SYSROOT apt update
         sudo chroot $SYSROOT apt upgrade
+        find $SYSROOT -name "libbfd-2.40-system.so"
 
     - name: Setup Python Environment
       shell: pwsh
