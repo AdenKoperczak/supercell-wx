@@ -141,7 +141,9 @@ jobs:
                          $SYSROOT \
                          http://deb.debian.org/debian
         sudo chroot $SYSROOT apt update
-        sudo chroot $SYSROOT apt install -y libatomic1 gcc
+        sudo chroot $SYSROOT apt install -y libatomic1 \
+                                            gcc \
+                                            binutils
 
     - name: Setup Python Environment
       shell: pwsh
