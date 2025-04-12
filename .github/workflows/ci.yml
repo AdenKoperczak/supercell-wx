@@ -131,16 +131,16 @@ jobs:
                              ninja-build \
                              ${{ matrix.compiler_packages }}
 
-    - name: Setup Debian SysRoot
+    - name: Setup SysRoot
       if: ${{ endsWith(matrix.os, 'arm') }}
       shell: bash
       run: |
         sudo apt-get install debootstrap qemu-user-static
-        sudo debootstrap --include=build-essential,cmake,binutils,g++ \
+        sudo debootstrap --include=build-essential,cmake,binutils,${{ matrix.compiler_packages }} \
                          --arch=arm64 \
-                         bookworm \
+                         jammy \
                          $SYSROOT \
-                         http://deb.debian.org/debian
+                         http://archive.ubuntu.com/ubuntu
         sudo chroot $SYSROOT apt update
         sudo chroot $SYSROOT apt upgrade
 
