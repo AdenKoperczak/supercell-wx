@@ -136,6 +136,8 @@ jobs:
                     conan
 
     - name: Cache Conan Packages
+      env:
+        PROGRAMFILES: ''
       uses: actions/cache@v4
       with:
         path: ~/.conan2
