@@ -135,6 +135,12 @@ jobs:
                     GitPython `
                     conan
 
+    - name: Remove Git tar
+      if: ${{ startsWith(matrix.os, 'windows') }}
+      shell: pwsh
+        move "C:\Program Files\Git\usr\bin\tar.exe" `
+             "C:\Program Files\Git\usr\bin\tar.old.exe"
+
     - name: Cache Conan Packages
       env:
         PROGRAMFILES: ''
@@ -142,6 +148,12 @@ jobs:
       with:
         path: ~/.conan2
         key: build-${{ matrix.conan_profile }}-${{ hashFiles('./source/conanfile.py', './source/tools/conan/profiles/*') }}
+
+    - name: Restore Git tar
+      if: ${{ startsWith(matrix.os, 'windows') }}
+      shell: pwsh
+        move "C:\Program Files\Git\usr\bin\tar.old.exe" `
+             "C:\Program Files\Git\usr\bin\tar.exe"
 
     - name: Install Conan Packages
       shell: pwsh
