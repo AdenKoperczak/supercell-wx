@@ -138,6 +138,7 @@ jobs:
     - name: Remove Git tar
       if: ${{ startsWith(matrix.os, 'windows') }}
       shell: pwsh
+      run: |
         move "C:\Program Files\Git\usr\bin\tar.exe" `
              "C:\Program Files\Git\usr\bin\tar.old.exe"
 
@@ -152,6 +153,7 @@ jobs:
     - name: Restore Git tar
       if: ${{ startsWith(matrix.os, 'windows') }}
       shell: pwsh
+      run: |
         move "C:\Program Files\Git\usr\bin\tar.old.exe" `
              "C:\Program Files\Git\usr\bin\tar.exe"
 
