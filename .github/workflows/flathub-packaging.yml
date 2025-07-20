@@ -106,6 +106,7 @@ jobs:
     - name: Collect Artifacts
       shell: bash
       run: |
+        mv ~/.conan2 .
         tar -czf \
           supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz \
           ./.conan2/
