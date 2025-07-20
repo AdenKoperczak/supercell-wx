@@ -1,0 +1,116 @@
+name: Flathub Packaging
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  # Cancel in-progress jobs for the same pull request
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux_x64
+            os: ubuntu-22.04
+            build_type: Release
+            env_cc: gcc-11
+            env_cxx: g++-11
+            compiler: gcc
+            cppflags: ''
+            ldflags: ''
+            qt_version: 6.8.3
+            qt_arch_aqt: linux_gcc_64
+            qt_arch_dir: gcc_64
+            qt_modules: qtimageformats qtmultimedia qtpositioning qtserialport
+            qt_tools: ''
+            conan_package_manager: --conf tools.system.package_manager:mode=install --conf tools.system.package_manager:sudo=True
+            conan_profile: scwx-linux_gcc-11
+            appimage_arch: x86_64
+            artifact_suffix: linux-x64
+            compiler_packages: ''
+          - name: linux_arm64
+            os: ubuntu-24.04-arm
+            build_type: Release
+            env_cc: gcc-11
+            env_cxx: g++-11
+            compiler: gcc
+            cppflags: ''
+            ldflags: ''
+            qt_version: 6.8.3
+            qt_arch_aqt: linux_gcc_arm64
+            qt_arch_dir: gcc_arm64
+            qt_modules: qtimageformats qtmultimedia qtpositioning qtserialport
+            qt_tools: ''
+            conan_package_manager: --conf tools.system.package_manager:mode=install --conf tools.system.package_manager:sudo=True
+            conan_profile: scwx-linux_gcc-11_armv8
+            appimage_arch: aarch64
+            artifact_suffix: linux-arm64
+            compiler_packages: g++-11
+    name: ${{ matrix.name }}
+    env:
+      CC: ${{ matrix.env_cc }}
+      CXX: ${{ matrix.env_cxx }}
+      SCWX_VERSION: v0.5.1
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Setup
+      run: git config --global core.longpaths true
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        path: source
+        submodules: recursive
+
+
+    - name: Setup Ubuntu Environment
+      shell: bash
+      run: |
+        sudo apt-get install doxygen \
+                             flatpak \
+                             flatpak-builder \
+                             ${{ matrix.compiler_packages }}
+
+    - name: Setup Python Environment
+      shell: pwsh
+      run: |
+        pip install -r ./source/requirements.txt
+
+    - name: Install Conan Packages
+      shell: bash
+      run: |
+        conan config install \
+          ./source/tools/conan/profiles/${{ matrix.conan_profile }} \
+          -tf profiles
+        conan export ./source/tools/conan/stopbuild
+        mkdir build
+        cd build
+        mkdir conan
+        # TODO is conan directory may need to be copied
+        conan install ../source/ \
+          --remote conancenter \
+          --build "*" \
+          --profile:all ${{ matrix.conan_profile }} \
+          --settings:all build_type=${{ matrix.build_type }} \
+          --output-folder ./conan/ \
+          --tool-require=stopbuild/1.0 \
+          ${{ matrix.conan_package_manager }} || true
+
+    # TODO https://github.com/flatpak/flatpak-builder-tools/tree/master/pip
+
+    - name: Collect Artifacts
+      shell: bash
+      run: |
+        tar -czf \
+          supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz \
+          .conan2/
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}
+        path: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz
