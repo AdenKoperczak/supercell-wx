@@ -7,8 +7,9 @@ class StopBuildConan(ConanFile):
     version = "1.0"
 
     def build(self):
-        self.output.info("Build aborted by stopbuild")
-        sys.exit(1)
+        if os.getenv("CONAN_NO_BUILD", "0") == "1":
+            self.output.info("Build aborted: CONAN_NO_BUILD set")
+            sys.exit(1)
 
     def package(self):
         pass

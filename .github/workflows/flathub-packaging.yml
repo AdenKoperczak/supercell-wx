@@ -58,6 +58,7 @@ jobs:
       CC: ${{ matrix.env_cc }}
       CXX: ${{ matrix.env_cxx }}
       SCWX_VERSION: v0.5.1
+      CONAN_NO_BUILD: "1"
     runs-on: ${{ matrix.os }}
     steps:
     - name: Setup
@@ -93,7 +94,6 @@ jobs:
         mkdir build
         cd build
         mkdir conan
-        # TODO is conan directory may need to be copied
         conan install ../source/ \
           --remote conancenter \
           --build "*" \
@@ -104,16 +104,24 @@ jobs:
           ${{ matrix.conan_package_manager }} || true
 
     # TODO https://github.com/flatpak/flatpak-builder-tools/tree/master/pip
-
     - name: Collect Artifacts
       shell: bash
       run: |
         tar -czf \
           supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz \
-          .conan2/
+          ./.conan2/
+        tar -czf \
+          supercell-wx-flathub-cmake-${{ matrix.artifact_suffix }}.tar.gz \
+          ./build/conan
 
-    - name: Upload Artifacts
+    - name: Upload Dependencies Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}
         path: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz
+
+    - name: Upload CMake Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: supercell-wx-flathub-cmake-${{ matrix.artifact_suffix }}
+        path: supercell-wx-flathub-cmake-${{ matrix.artifact_suffix }}.tar.gz
