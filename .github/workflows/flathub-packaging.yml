@@ -2,6 +2,9 @@ name: Flathub Packaging
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'flathub-build'
 
 concurrency:
   # Cancel in-progress jobs for the same pull request
