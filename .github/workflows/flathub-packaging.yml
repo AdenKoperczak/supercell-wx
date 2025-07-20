@@ -83,6 +83,7 @@ jobs:
       shell: pwsh
       run: |
         pip install -r ./source/requirements.txt
+        pip install pyyaml
 
     - name: Install Conan Packages
       shell: bash
@@ -102,12 +103,26 @@ jobs:
           --output-folder ./conan/ \
           ${{ matrix.conan_package_manager }} || true
 
-    # TODO https://github.com/flatpak/flatpak-builder-tools/tree/master/pip
+    - name: Download flatpak-builder-tools
+      shell: bash
+      run: |
+        git clone https://github.com/flatpak/flatpak-builder-tools.git
+
+    - name: Get Python requirements
+      shell: bash
+      # TODO GLAD requirements
+      run: |
+        python3 ./flatpak-builder-tools/pip/flatpak-pip-generator.py \
+          --runtime='org.kde.Sdk//6.8' \
+          --requirements-file='./source/requirements.txt' \
+          --output pypi-dependencies \
+          Jinja2>=2.7,<4.0
+
     - name: Collect Artifacts
       shell: bash
       run: |
         mv ~/.conan2 .
-        rm -r .conan2/p/b/ .conan2/p/*/f/
+        rm -r .conan2/p/b/
 
         tar -czf \
           supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz \
@@ -118,3 +133,9 @@ jobs:
       with:
         name: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}
         path: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz
+
+    - name: Upload PyPi Dependencies Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: supercell-wx-flathub-pypi-${{ matrix.artifact_suffix }}
+        path: pypi-dependencies.json
