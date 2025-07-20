@@ -68,7 +68,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         path: source
-        submodules: recursive
+        #submodules: recursive
 
 
     - name: Setup Ubuntu Environment
@@ -100,7 +100,6 @@ jobs:
           --profile:all ${{ matrix.conan_profile }} \
           --settings:all build_type=${{ matrix.build_type }} \
           --output-folder ./conan/ \
-          --tool-require=stopbuild/1.0 \
           ${{ matrix.conan_package_manager }} || true
 
     # TODO https://github.com/flatpak/flatpak-builder-tools/tree/master/pip
