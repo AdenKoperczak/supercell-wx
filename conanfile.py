@@ -39,6 +39,9 @@ class SupercellWxConan(ConanFile):
             self.options["libcurl"].ca_bundle = "none"
             self.options["libcurl"].ca_path   = "none"
 
+    def build_requirements(self):
+        self.tool_requires("stopbuild/1.0")
+
     def requirements(self):
         if self.settings.os == "Linux":
             self.requires("mesa-glu/9.0.3")

@@ -58,6 +58,7 @@ jobs:
       CC: ${{ matrix.env_cc }}
       CXX: ${{ matrix.env_cxx }}
       SCWX_VERSION: v0.5.1
+      CONAN_NO_BUILD: "1"
     runs-on: ${{ matrix.os }}
     steps:
     - name: Setup
@@ -89,6 +90,7 @@ jobs:
         conan config install \
           ./source/tools/conan/profiles/${{ matrix.conan_profile }} \
           -tf profiles
+        conan export ./source/tools/conan/stopbuild
         mkdir build
         cd build
         mkdir conan
@@ -110,18 +112,9 @@ jobs:
         tar -czf \
           supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz \
           ./.conan2/
-        tar -czf \
-          supercell-wx-flathub-cmake-${{ matrix.artifact_suffix }}.tar.gz \
-          ./build/conan
 
     - name: Upload Dependencies Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}
         path: supercell-wx-flathub-deps-${{ matrix.artifact_suffix }}.tar.gz
-
-    - name: Upload CMake Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: supercell-wx-flathub-cmake-${{ matrix.artifact_suffix }}
-        path: supercell-wx-flathub-cmake-${{ matrix.artifact_suffix }}.tar.gz
